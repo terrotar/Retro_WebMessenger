@@ -1,22 +1,44 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Messenger</title>
+{% extends 'base.html' %}
 
-</head>
-<body>
+{% block head %}
+    <title>Web Messenger - Home</title>
+{%  endblock %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js" integrity="sha512-iZIBSs+gDyTH0ZhUem9eQ1t4DcEn2B9lHxfRMeGQhyNdSUz+rb+5A3ummX6DQTOIs1XK0gOteOg/LPtSo9VJ+w==" crossorigin="anonymous" referrerpolicy="no-referrer">
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-</script>
+{% block body %}
+
+
+{% if current_user.is_authenticated %}
+
+
+<h3>Welcome, {{ current_user.username }}!</h3>
+
+<div style="display: inline-flex;">
+    <form action="{{ url_for('logout') }}" method="GET">
+        <button type="submit">Logout</button>
+    </form>
+
+    <form action="#" method="GET">
+        <button type="submit" style="margin-left: 5px;">Change Info</button>
+    </form>
+
+    <form action="#" method="GET">
+        <button type="submit" style="margin-left: 5px;">Delete User</button>
+    </form>
+    <hr>
+</div>
+
+<hr>
+
+<h3>WebChat</h3>
+
+<ul id="messages"></ul>
+    <input type='text' id='myMessage'>
+    <button id='sendbutton'>Send</button>
+
+
 
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function() {
-
 
         const socket = io('http://127.0.0.1:5000/');
 
@@ -37,14 +59,38 @@
     });
 </script>
 
-<h1>Welcome to WebMessenger !</h1>
-<p>Back to retro's of webchat!</p>
+
+{% else %}
+
+
+<h3><u>Account</u></h3>
+
+<form action="/register" method="GET">
+    <button type="submit">Register</button>
+</form>
 <br>
+<hr>
 
 
-<ul id="messages"></ul>
-    <input type='text' id='myMessage'>
-    <button id='sendbutton'>Send</button>
+<h3><u>Login</u></h3>
 
-</body>
-</html>
+{% if login_error %}
+    <h3>E-mail and password do not check, sorry</h3>
+{% endif %}
+
+    <form action="{{ url_for('login') }}" method="POST">
+        <label for="email">E-mail: </label>
+        <input type="email" name="email" id="email">
+        <br>
+        <br>
+        <label for="pwd">Password: </label>
+        <input type="password" name="pwd" id="pwd">
+        <br>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+
+
+{% endif %}
+
+{% endblock %}
