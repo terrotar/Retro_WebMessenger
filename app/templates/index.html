@@ -1,10 +1,50 @@
-{% extends 'base.html' %}
-
-{% block head %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Messenger</title>
-{% endblock %}
 
-{% block body %}
-    <h1>Welcome to WebMessenger !</h1>
-    <p>Back to retro's of webchat!</p>
-{% endblock %}
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js" integrity="sha512-iZIBSs+gDyTH0ZhUem9eQ1t4DcEn2B9lHxfRMeGQhyNdSUz+rb+5A3ummX6DQTOIs1XK0gOteOg/LPtSo9VJ+w==" crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
+
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+
+
+        const socket = io('http://127.0.0.1:5000/');
+
+        socket.on('connect', function() {
+            socket.send('I\'m connected!');
+        });
+
+        socket.on('message', function(msg) {
+            $('#messages').append('<li>'+msg+'</li>');
+            console.log('Received message.');
+        });
+
+        $('#sendbutton').on('click', function() {
+            socket.send($('#myMessage').val());
+            $('#myMessage').val('');
+        });
+
+    });
+</script>
+
+<h1>Welcome to WebMessenger !</h1>
+<p>Back to retro's of webchat!</p>
+<br>
+
+
+<ul id="messages"></ul>
+    <input type='text' id='myMessage'>
+    <button id='sendbutton'>Send</button>
+
+</body>
+</html>

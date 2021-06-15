@@ -13,8 +13,17 @@ from app import app, socketio
 # of client request.
 
 
+# socket conection message when a new client connect
+# The print appears in server side and the send msg
+# appears to client
+@socketio.on('connect')
+def handle_connection():
+    print('A new user has just connected')
+
+
+# socket handle_message when the client send a new one
 @socketio.on('message')
-def handleMessage(msg):
+def handle_message(msg):
     print('Message: ' + msg)
     # Returns the msg sent by a client
     send(msg, broadcast=True)
@@ -22,12 +31,12 @@ def handleMessage(msg):
     # connected at that momment
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, port=5000, debug=True)
     # It's similar to app.run() but it wrapes the app and
     # adds socket.io functionality

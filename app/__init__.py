@@ -6,4 +6,4 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'PedroChallenge'
 
 
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
