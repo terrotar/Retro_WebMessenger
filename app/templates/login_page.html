@@ -1,0 +1,44 @@
+{% extends 'base.html'%}
+
+{% block head %}
+    <title>WebMessenger - LoginPage</title>
+{% endblock %}
+
+
+{% block body %}
+    <h3><u>Login</u></h3>
+
+    <h3>Welcome, {{ current_user.username }}!</h3>
+
+    <div style="display: inline-flex;">
+        <form action="{{ url_for('logout') }}" method="GET">
+            <button type="submit">Logout</button>
+        </form>
+    
+        <form action="#" method="GET">
+            <button type="submit" style="margin-left: 5px;">Change Info</button>
+        </form>
+    
+        <form action="#" method="GET">
+            <button type="submit" style="margin-left: 5px;">Delete User</button>
+        </form>
+        <hr>
+    </div>
+
+
+
+    <hr>
+    <h3><u>Rooms</u></h3>
+
+
+    <form action="{{ url_for('teste_room') }}" method="GET">
+        <button type="submit" style="margin-left: 5px; color: aqua; background-color: black;">Room 01</button>
+    </form>
+
+
+
+
+
+
+
+{% endblock %}

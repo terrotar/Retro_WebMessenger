@@ -6,6 +6,24 @@
 
 {% block body %}
 
+
+{% if current_user.is_authenticated %}
+
+<h3>Welcome, {{ current_user.username }}!</h3>
+
+<div style="display: inline-flex;">
+    <form action="{{ url_for('logout') }}" method="GET">
+        <button type="submit">Logout</button>
+    </form>
+
+    <form action="{{ url_for('login') }}" method="GET">
+        <button type="submit" style="margin-left: 5px;">LoginPage</button>
+    </form>
+    <hr>
+</div>
+
+{% else %}
+
 <h3><u>Register</u></h3>
 
 
@@ -33,5 +51,7 @@
         <br>
         <button type="submit">Confirm</button>
     </form>
+
+    {% endif %}
 
 {% endblock %}

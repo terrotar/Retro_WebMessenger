@@ -1,8 +1,8 @@
 from flask import render_template, redirect, request, url_for
 
-from flask_socketio import send
+from flask_socketio import disconnect, send, emit
 
-from flask_login import login_user, logout_user
+from flask_login import current_user, login_user, logout_user, current_user
 
 from app import app, socketio, db
 from app.models import User
@@ -18,12 +18,19 @@ from app.models import User
 # socket conection message when a new client connect
 # The print appears in server side and the send msg
 # appears to client
-@socketio.on('connect')
-def handle_connection():
-    print('A new user has just connected')
 
+
+@socketio.on('connect')
+def connect_handler():
+    if(current_user.is_authenticated):
+        emit(f"{current_user.username} has joined the room.",
+             broadcast=True)
+    else:
+        return False
 
 # socket handle_message when the client send a new one
+
+
 @socketio.on('message')
 def handle_message(msg):
     print('Message: ' + msg)
@@ -71,7 +78,7 @@ def register():
                                info_error=True)
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if(request.method == 'POST'):
         email = request.form['email']
@@ -83,13 +90,20 @@ def login():
                                    login_error=True)
         else:
             login_user(user)
-            return redirect(url_for('index'))
+            return render_template('login_page.html')
+    if(request.method == 'GET'):
+        return render_template('login_page.html')
 
 
 @app.route('/logout', methods=['GET'])
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route('/teste_room', methods=['GET', 'POST'])
+def teste_room():
+    return render_template('room_01.html')
 
 
 if __name__ == '__main__':

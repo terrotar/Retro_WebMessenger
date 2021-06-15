@@ -17,47 +17,11 @@
         <button type="submit">Logout</button>
     </form>
 
-    <form action="#" method="GET">
-        <button type="submit" style="margin-left: 5px;">Change Info</button>
-    </form>
-
-    <form action="#" method="GET">
-        <button type="submit" style="margin-left: 5px;">Delete User</button>
+    <form action="{{ url_for('login') }}" method="GET">
+        <button type="submit" style="margin-left: 5px;">LoginPage</button>
     </form>
     <hr>
 </div>
-
-<hr>
-
-<h3>WebChat</h3>
-
-<ul id="messages"></ul>
-    <input type='text' id='myMessage'>
-    <button id='sendbutton'>Send</button>
-
-
-
-<script type="text/javascript" charset="utf-8">
-    $(document).ready(function() {
-
-        const socket = io('http://127.0.0.1:5000/');
-
-        socket.on('connect', function() {
-            socket.send('I\'m connected!');
-        });
-
-        socket.on('message', function(msg) {
-            $('#messages').append('<li>'+msg+'</li>');
-            console.log('Received message.');
-        });
-
-        $('#sendbutton').on('click', function() {
-            socket.send($('#myMessage').val());
-            $('#myMessage').val('');
-        });
-
-    });
-</script>
 
 
 {% else %}

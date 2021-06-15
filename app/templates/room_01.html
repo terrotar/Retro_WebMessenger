@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>WebMessenger - Room 01</title>
+{% endblock %}
+
+
+{% block body %}
+
+<h3>Welcome, {{ current_user.username }}!</h3>
+
+<div style="display: inline-flex;">
+    <form action="{{ url_for('logout') }}" method="GET">
+        <button type="submit">Logout</button>
+    </form>
+
+    <form action="{{ url_for('login') }}" method="GET">
+        <button type="submit" style="margin-left: 5px;">LoginPage</button>
+    </form>
+    <hr>
+</div>
+
+<hr>
+
+
+<h3>Online</h3>
+    <p>Still in development.</p>
+<hr>
+
+
+
+
+
+<h3>WebChat</h3>
+
+<ul id="messages"></ul>
+    <input type='text' id='myMessage'>
+    <button id='sendbutton'>Send</button>
+
+
+
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+
+        const socket = io('http://127.0.0.1:5000/');
+
+        socket.on('connect', function() {
+            socket.send('<strong><u>{{ current_user.username }}</strong></u> has just joined the room!');
+        });
+
+        socket.on('message', function(msg) {
+            $('#messages').append('<li>'+msg+'</li>');
+            console.log('Received message.');
+        });
+
+        $('#sendbutton').on('click', function() {
+            socket.send($('#myMessage').val());
+            $('#myMessage').val('');
+        });
+
+    });
+</script>
+
+{% endblock %}
