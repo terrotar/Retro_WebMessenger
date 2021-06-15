@@ -101,6 +101,46 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.route('/<username>/delete', methods=['GET', 'POST'])
+def delete_user(username):
+    if(request.method == 'GET'):
+        return render_template('delete_account.html')
+    if(request.method == 'POST'):
+        pwd = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user and user.verify_password(pwd):
+            db.session.delete(user)
+            db.session.commit()
+            return render_template('index.html')
+        else:
+            return render_template('delete_account.html',
+                                   password_error=True)
+
+
+@app.route('/<username>/change_info', methods=['GET', 'POST'])
+def change_info(username):
+    if(request.method == 'GET'):
+        return render_template('change_info.html')
+    if(request.method == 'POST'):
+        new_email = request.form['email']
+        new_username = request.form['username']
+        new_name = request.form['name']
+        new_password = request.form['new_password']
+        old_password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user and user.verify_password(old_password):
+            user.email = new_email
+            user.name = new_name
+            user.username = new_username
+            user.password = new_password
+            db.session.commit()
+            return redirect(url_for('login'))
+        else:
+            return render_template('change_info.html',
+                                   password_error=True)
+
+
+
 @app.route('/teste_room', methods=['GET', 'POST'])
 def teste_room():
     return render_template('room_01.html')

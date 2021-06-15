@@ -15,11 +15,11 @@
             <button type="submit">Logout</button>
         </form>
     
-        <form action="#" method="GET">
+        <form action="{{ url_for('change_info', username=current_user.username) }}" method="GET">
             <button type="submit" style="margin-left: 5px;">Change Info</button>
         </form>
     
-        <form action="#" method="GET">
+        <form action="{{ url_for('delete_user', username=current_user.username) }}" method="GET">
             <button type="submit" style="margin-left: 5px;">Delete User</button>
         </form>
         <hr>

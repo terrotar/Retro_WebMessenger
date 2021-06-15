@@ -1,0 +1,41 @@
+{% extends 'base.html'%}
+
+{% block head %}
+    <title>WebMessenger - Change Info</title>
+{% endblock %}
+
+
+{% block body %}
+    <h3><u>Change Info</u></h3>
+
+
+    {% if password_error %}
+        <h3>Password do not check, sorry</h3>
+    {% endif %}
+
+
+    <form action="" method="POST">
+    <label for="email">E-mail: </label>
+        <input type="email" name="email" id="email" placeholder="{{ current_user.email }}" required>
+    <br>
+    <br>
+    <label for="new_password">New Password: </label>
+        <input type="password" name="new_password" id="new_password" required>
+    <br>
+    <br>
+    <label for="username">Username: </label>
+        <input type="text" name="username" id="username" placeholder="{{ current_user.username }}" required>
+    <br>
+    <br>
+    <label for="name">Name: </label>
+        <input type="text" name="name" id="name" placeholder="{{ current_user.name }}" required>
+    <br>
+    <br>
+    <label for="password">Old Password: </label>
+        <input type="password" name="password" id="password" required>
+    <br>
+    <br>
+    <button type="submit">Change</button>
+</form>
+
+{% endblock %}
