@@ -1,8 +1,8 @@
 from flask import render_template, redirect, request, url_for
 
-from flask_socketio import disconnect, send, emit
+from flask_socketio import disconnect, send, emit, join_room, leave_room
 
-from flask_login import current_user, login_user, logout_user, current_user
+from flask_login import current_user, login_user, logout_user
 
 from app import app, socketio, db
 from app.models import User
@@ -21,14 +21,20 @@ from app.models import User
 
 
 @socketio.on('connect')
-def connect_handler():
+def handle_connect():
     if(current_user.is_authenticated):
         emit(f"{current_user.username} has joined the room.",
              broadcast=True)
+        print(f"{current_user.username} has logged in.")
     else:
         return False
 
-# socket handle_message when the client send a new one
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    emit(f"{current_user.username} has left room.",
+         broadcast=True)
+    print(f"{current_user.username} has logged out.")
 
 
 @socketio.on('message')
@@ -98,7 +104,7 @@ def login():
 @app.route('/logout', methods=['GET'])
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return render_template('index.html')
 
 
 @app.route('/<username>/delete', methods=['GET', 'POST'])
@@ -138,7 +144,6 @@ def change_info(username):
         else:
             return render_template('change_info.html',
                                    password_error=True)
-
 
 
 @app.route('/teste_room', methods=['GET', 'POST'])

@@ -7,11 +7,15 @@
 
 {% block body %}
 
-<h3>Welcome, {{ current_user.username }}!</h3>
+
+{% if current_user.is_authenticated %}
+
+
+<h3>Welcome, <u>{{ current_user.username }}</u>!</h3>
 
 <div style="display: inline-flex;">
     <form action="{{ url_for('logout') }}" method="GET">
-        <button type="submit">Logout</button>
+        <button type="submit" id="logout_button">Logout</button>
     </form>
 
     <form action="{{ url_for('login') }}" method="GET">
@@ -23,20 +27,17 @@
 <hr>
 
 
-<h3>Online</h3>
-    <p>Still in development.</p>
+<h3><u>Users Online</u></h3>
+    <ul id="users_online"></ul>
 <hr>
 
 
 
-
-
-<h3>WebChat</h3>
+<h3><u>WebChat</u></h3>
 
 <ul id="messages"></ul>
     <input type='text' id='myMessage'>
     <button id='sendbutton'>Send</button>
-
 
 
 <script type="text/javascript" charset="utf-8">
@@ -44,8 +45,28 @@
 
         const socket = io('http://127.0.0.1:5000/');
 
+        let current_users = [];
+
+
         socket.on('connect', function() {
-            socket.send('<strong><u>{{ current_user.username }}</strong></u> has just joined the room!');
+            socket.send('All greetings <strong><u>{{ current_user.username }}</strong></u>!');
+            $('#users_online').append('<li><strong><u>{{ current_user.username }}</u></strong></li>');
+            console.log('{{ current_user.username }} is in users_online list.');
+            
+        });
+
+
+        $('#logout_button').on('click', function() {
+            socket.send('Bye <strong><u>{{ current_user.username }}</strong></u>, see ya!');
+            user = $('#users_online').indexOf('<li><strong><u>{{ current_user.username }}</u></strong></li>');
+            if (user > -1) {
+                $('#users_online').splice(user, 1);
+            }
+            $('#users_online').append('<li>{{ current_user.username }}</li>');
+        });
+
+        socket.on('disconnect', function() {
+            socket.send('<strong><u>{{ current_user.username }}</strong></u> has just logged out!');
         });
 
         socket.on('message', function(msg) {
@@ -60,5 +81,12 @@
 
     });
 </script>
+
+{% else %}
+
+    <h3><u>Login first =]</u></h3>
+
+
+{% endif %}
 
 {% endblock %}
